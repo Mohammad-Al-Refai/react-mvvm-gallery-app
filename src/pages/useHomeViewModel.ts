@@ -1,33 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ImageModel } from "../models/ImageModel";
 
 export function useHomeViewModel() {
-  const sampleData = [
-    new ImageModel()
-      .setId(window.crypto.randomUUID())
-      .setLabel("1")
-      .setURL("https://placehold.co/600x400/red/white"),
-    new ImageModel()
-      .setId(window.crypto.randomUUID())
-      .setLabel("2")
-      .setURL("https://placehold.co/600x400/green/white"),
-    new ImageModel()
-      .setId(window.crypto.randomUUID())
-      .setLabel("3")
-      .setURL("https://placehold.co/600x400/000000/blue"),
-  ];
   const [addDialogState, setAddDialogState] = useState(false);
   const [imageLabelValue, setImageLabelValue] = useState("");
   const [imageURLValue, setImageURLValue] = useState("");
-  const [images, setImages] = useState<ImageModel[]>(sampleData);
+  const [images, setImages] = useState<ImageModel[]>([]);
   const [curser, setCurser] = useState(0);
-  const [isNextDisabled, setNextDisabled] = useState(false);
-  const [isPrevDisabled, setPrevDisabled] = useState(false);
   const [imageViewerDialogState, setImageViewerDialog] = useState(false);
 
-  useEffect(() => {
-    console.log({ isNextDisabled, isPrevDisabled });
-  }, [isNextDisabled, isPrevDisabled]);
   function openAddImageDialog() {
     setAddDialogState(true);
   }
@@ -66,7 +47,6 @@ export function useHomeViewModel() {
       newCurser++;
       setCurser(newCurser);
     }
-    updatePaginationControl();
     console.log("STOP NEXT");
   }
   function onPrevClicked() {
@@ -75,33 +55,23 @@ export function useHomeViewModel() {
       newCurser--;
       setCurser(newCurser);
     }
-    updatePaginationControl();
     console.log("STOP PREV");
-  }
-  function updatePaginationControl() {
-    if (curser + 1 >= images.length - 1) {
-      setNextDisabled(true);
-    } else {
-      setNextDisabled(false);
-    }
-    if (curser - 1 <= 0) {
-      setPrevDisabled(true);
-    } else {
-      setPrevDisabled(false);
-    }
   }
   function openImageViewer(image: ImageModel) {
     const newCurser = images.indexOf(image);
     setCurser(newCurser);
     setImageViewerDialog(true);
-    updatePaginationControl();
   }
   function closeImageViewer() {
-    setNextDisabled(false);
-    setPrevDisabled(false);
+    setCurser(0);
     setImageViewerDialog(false);
   }
-
+  function getSelectedImage() {
+    if (!images[curser]) {
+      return "";
+    }
+    return images[curser].url;
+  }
   return {
     openAddImageDialog,
     closeAddImageDialog,
@@ -119,7 +89,6 @@ export function useHomeViewModel() {
     openImageViewer,
     closeImageViewer,
     imageViewerDialogState,
-    isNextDisabled,
-    isPrevDisabled,
+    getSelectedImage,
   };
 }

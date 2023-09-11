@@ -47,21 +47,13 @@ export function Home() {
       </Modal>
       <Modal show={vm.imageViewerDialogState} onHide={vm.closeImageViewer}>
         <Modal.Body>
-          <CardImg src={vm.images.length > 0 ? vm.images[vm.curser].url : ""} />
+          <CardImg src={vm.getSelectedImage()} />
         </Modal.Body>
         <Modal.Footer className="d-flex justify-content-between">
-          <Button
-            variant="primary"
-            disabled={vm.isPrevDisabled}
-            onClick={vm.onPrevClicked}
-          >
+          <Button variant="primary" onClick={vm.onPrevClicked}>
             Perv
           </Button>
-          <Button
-            variant="primary"
-            disabled={vm.isNextDisabled}
-            onClick={vm.onNextClicked}
-          >
+          <Button variant="primary" onClick={vm.onNextClicked}>
             Next
           </Button>
         </Modal.Footer>
